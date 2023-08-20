@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ML Preprocessing UI</title>
+    
+        
+</head>
+{% comment %} action="{% url 'get_columns' %} {% endcomment %}
+<body>
+    <h1>ML Preprocessing UI</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'get_columns' %}">
+
+        {% csrf_token %}
+        <label for="dataset">Upload Dataset (CSV file):</label>
+        <input type="file" name="dataset" id="dataset" required>
+        <br><br>
+        
+        <input type="submit" value="get_columns">
+    </form>
+    
+    <form method="post" enctype="multipart/form-data" action="{% url 'preprocessing_form' %}">
+    
+        {% csrf_token %}
+        <select name="target" id="target" required>
+            <option value="" selected disabled>Select Target Variable</option>
+            {% for column in columns %}
+                <option value="{{ column }}">{{ column }}</option>
+            {% endfor %}
+        </select>
+        {% comment %} <label for="target">Target Variable:</label>
+        <select id="column-dropdown" name="target" required>
+            <option value="" selected disabled>Select Target Variable</option>
+        </select> {% endcomment %}
+        <br><br> 
+        <label>Preprocessing Steps:</label>
+        <input type="checkbox" name="preprocessing_steps" value="null_handling"> Handle Null Values
+        <input type="checkbox" name="preprocessing_steps" value="feature_scaling"> Feature Scaling
+        <input type="checkbox" name="preprocessing_steps" value="categorical_encoding"> Categorical Encoding
+        <br><br>
+     <br><br>
+        <label>Encoding Method:</label>
+        <input type="radio" name="encoding_method" value="label_encoding"> Label Encoding
+        <input type="radio" name="encoding_method" value="onehot_encoding"> One-Hot Encoding
+        <br><br>
+        <input type="submit" value="Preprocess">
+        {% if download_link %}
+        <p>Preprocessing complete! <a href="{{ download_link }}" download>Download Refined CSV</a></p>
+        {% endif %}
+
+    </form>
+</body>
+</html>
